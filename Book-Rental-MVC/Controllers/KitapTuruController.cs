@@ -17,5 +17,26 @@ namespace Book_Rental_MVC.Controllers
             List<KitapTuru> kitapTuruList = _context.KitapTurleri.ToList();
             return View(kitapTuruList);
         }
+
+        public IActionResult Ekle()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Ekle(KitapTuru model)
+        {
+            if(ModelState.IsValid)
+            {
+                _context.KitapTurleri.Add(model);
+                _context.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(model);
+            }
+        }
     }
 }
