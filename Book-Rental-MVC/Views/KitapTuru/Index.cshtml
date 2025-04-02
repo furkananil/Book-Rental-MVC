@@ -1,5 +1,18 @@
 ﻿@model List<KitapTuru>
 
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
 
 <div class="container">
 
@@ -14,8 +27,6 @@
             <tr>
                 <th>Id</th>
                 <th>Kitap Türü</th>
-                <th></th>
-                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -28,7 +39,7 @@
                         <a asp-controller="KitapTuru" asp-action="Guncelle" asp-route-id="@item.Id" class="btn btn-info" type="button" style="width:250px">Güncelle</a>
                     </td>
                     <td>
-                        <a asp-controller="KitapTuru" asp-action="Sil" class="btn btn-danger" type="button" style="width:250px">Sil</a>
+                        <a asp-controller="KitapTuru" asp-action="Sil" asp-route-id="@item.Id" class="btn btn-danger" type="button" style="width:250px">Sil</a>
                     </td>
                 </tr>
             }
