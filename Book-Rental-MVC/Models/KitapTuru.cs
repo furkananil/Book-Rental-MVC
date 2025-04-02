@@ -8,7 +8,8 @@ namespace Book_Rental_MVC.Models
         [Key]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Kitap Türü Adı boş bırakılamaz!")]
+        [MaxLength(25)]
         [DisplayName("Kitap Türü Adı")]
         public string Ad { get; set; }
     }

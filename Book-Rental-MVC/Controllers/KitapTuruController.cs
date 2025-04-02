@@ -33,10 +33,33 @@ namespace Book_Rental_MVC.Controllers
 
                 return RedirectToAction("Index");
             }
-            else
+            return View(model);
+        }
+
+        public IActionResult Guncelle(int? id)
+        {
+            if(id == null)
+                return NotFound();
+
+            KitapTuru? kitapTuruVt = _context.KitapTurleri.Find(id); // idye ait kaydi getir
+
+            if(kitapTuruVt == null)
+                return NotFound();
+
+            return View(kitapTuruVt);
+        }
+
+        [HttpPost]
+        public IActionResult Guncelle(KitapTuru model)
+        {
+            if (ModelState.IsValid)
             {
-                return View(model);
+                _context.KitapTurleri.Update(model);
+                _context.SaveChanges();
+
+                return RedirectToAction("Index");
             }
+            return View(model);
         }
     }
 }
