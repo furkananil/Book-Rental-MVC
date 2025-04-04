@@ -1,4 +1,5 @@
 ﻿using Book_Rental_MVC.Models;
+using Book_Rental_MVC.Models.Abstract;
 using Book_Rental_MVC.Utility;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,15 +7,15 @@ namespace Book_Rental_MVC.Controllers
 {
     public class KitapTuruController : Controller
     {
-        private readonly AppDbContext _context;
-        public KitapTuruController(AppDbContext context)
+        private readonly IKitapTuruRepository _repository;
+        public KitapTuruController(IKitapTuruRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         public IActionResult Index()
         {
-            List<KitapTuru> kitapTuruList = _context.KitapTurleri.ToList();
+            List<KitapTuru> kitapTuruList = _repository.GetAll().ToList();
             return View(kitapTuruList);
         }
 
@@ -48,7 +49,7 @@ namespace Book_Rental_MVC.Controllers
         [HttpPost, ActionName("Sil")]
         public IActionResult SilPost(int? id)
         {
-            KitapTuru? kitapTuru = _context.KitapTurleri.Find(id);
+            KitapTuru? kitapTuru = _repository.Get(i => i.Id == id);
 
             if (kitapTuru == null)
             {
@@ -56,8 +57,8 @@ namespace Book_Rental_MVC.Controllers
                 return NotFound();
             }
 
-            _context.KitapTurleri.Remove(kitapTuru);
-            _context.SaveChanges();
+            _repository.Sil(kitapTuru);
+            _repository.Kaydet();
             TempData["SuccessMessage"] = "Kitap türü başarıyla silindi!";
 
             return RedirectToAction("Index");
@@ -68,7 +69,7 @@ namespace Book_Rental_MVC.Controllers
             if (id == null)
                 return NotFound();
 
-            KitapTuru? kitapTuruVt = _context.KitapTurleri.Find(id); // idye ait kaydi getir
+            KitapTuru? kitapTuruVt = _repository.Get(i => i.Id == id); // idye ait kaydi getir
 
             if (kitapTuruVt == null)
                 return NotFound();
@@ -82,16 +83,16 @@ namespace Book_Rental_MVC.Controllers
             {
                 if (isUpdate)
                 {
-                    _context.KitapTurleri.Update(model);
+                    _repository.Guncelle(model);
                     TempData["SuccessMessage"] = "Kitap türü başarıyla güncellendi!";
                 }
                 else
                 {
-                    _context.KitapTurleri.Add(model);
+                    _repository.Ekle(model);
                     TempData["SuccessMessage"] = "Kitap türü başarıyla eklendi!";
                 }
 
-                _context.SaveChanges();
+                _repository.Kaydet();
                 return RedirectToAction("Index");
             }
 
