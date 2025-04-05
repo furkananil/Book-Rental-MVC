@@ -1,4 +1,4 @@
-﻿@model List<KitapTuru>
+﻿@model List<Kitap>
 
 @if (TempData["SuccessMessage"] != null)
 {
@@ -18,7 +18,7 @@
 
     <div class="row pt-3 pb-4">
         <div>
-            <h1>Kitap Türleri</h1>
+            <h1>Kitaplar</h1>
         </div>
     </div>
     
@@ -26,7 +26,10 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Kitap Türü</th>
+                <th>Kitap Adi</th>
+                <th>Tanım</th>
+                <th>Yazar</th>
+                <th>Fiyat</th>
             </tr>
         </thead>
         <tbody>
@@ -34,12 +37,15 @@
             {
                 <tr>
                     <td>@item.Id</td>
-                    <td>@item.Ad</td>
+                    <td>@item.KitapAdi</td>
+                    <td>@item.Tanim</td>
+                    <td>@item.Yazar</td>
+                    <td>@item.Fiyat</td>
                     <td>
-                        <a asp-controller="KitapTuru" asp-action="Guncelle" asp-route-id="@item.Id" class="btn btn-info" type="button">Türü Güncelle</a>
+                        <a asp-controller="Kitap" asp-action="Guncelle" asp-route-id="@item.Id" class="btn btn-info" type="button">Kitap Güncelle</a>
                     </td>
                     <td>
-                        <a asp-controller="KitapTuru" asp-action="Sil" asp-route-id="@item.Id" class="btn btn-danger" type="button">Türü Sil</a>
+                        <a asp-controller="Kitap" asp-action="Sil" asp-route-id="@item.Id" class="btn btn-danger" type="button">Kitap Sil</a>
                     </td>
                 </tr>
             }
@@ -48,7 +54,7 @@
 
     <div class="row pt-3 pb-2">
         <div>
-            <a asp-controller="KitapTuru" asp-action="Ekle" class="btn btn-lg btn-primary" type="button">Yeni Kitap Türü Oluştur</a>
+            <a asp-controller="Kitap" asp-action="Ekle" class="btn btn-lg btn-primary" type="button">Yeni Kitap Oluştur</a>
         </div>
     </div>
 </div>
