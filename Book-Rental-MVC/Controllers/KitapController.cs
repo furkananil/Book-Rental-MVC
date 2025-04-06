@@ -2,15 +2,18 @@
 using Book_Rental_MVC.Models.Abstract;
 using Book_Rental_MVC.Models.Concrete;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Book_Rental_MVC.Controllers
 {
     public class KitapController : Controller
     {
         private readonly IKitapRepository _repository;
-        public KitapController(IKitapRepository kitapRepository)
+        private readonly IKitapTuruRepository _kitapTuruRepository;
+        public KitapController(IKitapRepository kitapRepository, IKitapTuruRepository kitapTuruRepository)
         {
             _repository = kitapRepository;
+            _kitapTuruRepository = kitapTuruRepository;
         }
 
         public IActionResult Index()
@@ -19,27 +22,38 @@ namespace Book_Rental_MVC.Controllers
             return View(kitapList);
         }
 
-        public IActionResult Ekle()
+        public IActionResult EkleGuncelle(int? id)
         {
-            return View();
+            IEnumerable<SelectListItem> KitapTuruList = _kitapTuruRepository.GetAll()
+                .Select(k => new SelectListItem { Text = k.Ad, Value = k.Id.ToString() });
+
+            ViewBag.KitapTuruList = KitapTuruList;
+
+            if (id == null || id == 0)
+                return View();
+            else
+                return ContextBulVeDon(id);
         }
 
         [HttpPost]
-        public IActionResult Ekle(Kitap model)
+        public IActionResult EkleGuncelle(Kitap model, IFormFile? file)
         {
             return Kaydet(model, false); // Ekleme işlemi
         }
 
+        /*
         public IActionResult Guncelle(int? id)
         {
             return ContextBulVeDon(id);
         }
+        
 
         [HttpPost]
         public IActionResult Guncelle(Kitap model)
         {
             return Kaydet(model, true); // Güncelleme işlemi
         }
+        */
 
         public IActionResult Sil(int? id)
         {
