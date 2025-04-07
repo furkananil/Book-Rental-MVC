@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Book_Rental_MVC.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250405113538_KitaplarTableAdd")]
-    partial class KitaplarTableAdd
+    [Migration("20250407210305_ReinstallDatabase")]
+    partial class ReinstallDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,13 @@ namespace Book_Rental_MVC.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("KitapTuruId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ResimUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Tanim")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -48,6 +55,8 @@ namespace Book_Rental_MVC.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("KitapTuruId");
 
                     b.ToTable("Kitaplar");
                 });
@@ -68,6 +77,17 @@ namespace Book_Rental_MVC.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("KitapTurleri");
+                });
+
+            modelBuilder.Entity("Book_Rental_MVC.Models.Kitap", b =>
+                {
+                    b.HasOne("Book_Rental_MVC.Models.KitapTuru", "KitapTuru")
+                        .WithMany()
+                        .HasForeignKey("KitapTuruId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("KitapTuru");
                 });
 #pragma warning restore 612, 618
         }

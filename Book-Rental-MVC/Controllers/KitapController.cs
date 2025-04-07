@@ -10,10 +10,12 @@ namespace Book_Rental_MVC.Controllers
     {
         private readonly IKitapRepository _repository;
         private readonly IKitapTuruRepository _kitapTuruRepository;
-        public KitapController(IKitapRepository kitapRepository, IKitapTuruRepository kitapTuruRepository)
+        public readonly IWebHostEnvironment _webHostEnvironment;
+        public KitapController(IKitapRepository kitapRepository, IKitapTuruRepository kitapTuruRepository, IWebHostEnvironment webHostEnvironment)
         {
             _repository = kitapRepository;
             _kitapTuruRepository = kitapTuruRepository;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
@@ -38,7 +40,23 @@ namespace Book_Rental_MVC.Controllers
         [HttpPost]
         public IActionResult EkleGuncelle(Kitap model, IFormFile? file)
         {
-            return Kaydet(model, false); // Ekleme işlemi
+            if(ModelState.IsValid) 
+            {
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                string kitapPath = Path.Combine(wwwRootPath, @"img");
+
+                using(var fileStream = new FileStream(Path.Combine(kitapPath, file.FileName), FileMode.Create))
+                {
+                    file.CopyTo(fileStream);
+                }
+                model.ResimUrl = @"\img\" + file.FileName;
+
+                _repository.Ekle(model);
+                _repository.Kaydet();
+                TempData["SuccessMessage"] = "Yeni Kitap Oluşturuldu";
+                return RedirectToAction("Index");
+            }
+            return View();
         }
 
         /*
