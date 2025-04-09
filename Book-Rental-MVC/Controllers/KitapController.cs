@@ -3,6 +3,7 @@ using Book_Rental_MVC.Models.Abstract;
 using Book_Rental_MVC.Models.Concrete;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Data.SqlClient;
 
 namespace Book_Rental_MVC.Controllers
 {
@@ -51,27 +52,22 @@ namespace Book_Rental_MVC.Controllers
                 }
                 model.ResimUrl = @"\img\" + file.FileName;
 
-                _repository.Ekle(model);
+
+                if (model.Id == 0)
+                {
+                    _repository.Ekle(model);
+                    TempData["SuccessMessage"] = "Yeni Kitap Oluşturuldu";
+                }
+                else
+                {
+                    _repository.Guncelle(model);
+                    TempData["SuccessMessage"] = "Yeni Güncelleme Başarılı";
+                }
                 _repository.Kaydet();
-                TempData["SuccessMessage"] = "Yeni Kitap Oluşturuldu";
                 return RedirectToAction("Index");
             }
             return View();
         }
-
-        /*
-        public IActionResult Guncelle(int? id)
-        {
-            return ContextBulVeDon(id);
-        }
-        
-
-        [HttpPost]
-        public IActionResult Guncelle(Kitap model)
-        {
-            return Kaydet(model, true); // Güncelleme işlemi
-        }
-        */
 
         public IActionResult Sil(int? id)
         {
@@ -107,29 +103,6 @@ namespace Book_Rental_MVC.Controllers
                 return NotFound();
 
             return View(kitapVt);
-        }
-
-        private IActionResult Kaydet(Kitap model, bool isUpdate)
-        {
-            if (ModelState.IsValid)
-            {
-                if (isUpdate)
-                {
-                    _repository.Guncelle(model);
-                    TempData["SuccessMessage"] = "Kitap başarıyla güncellendi!";
-                }
-                else
-                {
-                    _repository.Ekle(model);
-                    TempData["SuccessMessage"] = "Kitap başarıyla eklendi!";
-                }
-
-                _repository.Kaydet();
-                return RedirectToAction("Index");
-            }
-
-            TempData["ErrorMessage"] = "İşlem sırasında bir hata oluştu!";
-            return View(model);
         }
     }
 }
