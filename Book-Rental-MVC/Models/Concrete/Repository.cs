@@ -14,20 +14,40 @@ namespace Book_Rental_MVC.Models.Concrete
         {
             _context = context;
             dbSet = _context.Set<T>(); // _context.KitapTurleri
+            _context.Kitaplar.Include(k => k.KitapTuru).Include(k => k.KitapTuruId);
         }
         public void Ekle(T entity)
         {
             dbSet.Add(entity);
         }
 
-        public T Get(Expression<Func<T, bool>> filtre)
+        public T Get(Expression<Func<T, bool>> filtre, string? includeProps = null)
         {
-            return dbSet.FirstOrDefault(filtre);
+            IQueryable<T> query = dbSet;
+            query = query.Where(filtre);
+
+            if (!string.IsNullOrEmpty(includeProps))
+            {
+                foreach (var prop in includeProps.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(prop);
+                }
+            }
+            return query.FirstOrDefault();
         }
 
-        public IEnumerable<T> GetAll()
+        public IEnumerable<T> GetAll(string? includeProps = null)
         {
-            return dbSet.ToList();
+            IQueryable<T> query = dbSet;
+            
+            if(!string.IsNullOrEmpty(includeProps))
+            {
+                foreach(var prop in includeProps.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(prop);
+                }
+            }
+            return query.ToList();
         }
 
         public void Sil(T entity)

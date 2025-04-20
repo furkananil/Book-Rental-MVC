@@ -30,7 +30,7 @@
                 <th>Tanım</th>
                 <th>Yazar</th>
                 <th>Fiyat</th>
-                <th>Kitap Turu</th>
+                <th>Kitap Türü</th>
             </tr>
         </thead>
         <tbody>
@@ -42,6 +42,7 @@
                     <td>@item.Tanim</td>
                     <td>@item.Yazar</td>
                     <td>@item.Fiyat</td>
+                    <td>@item.KitapTuru.Ad</td>
                     <td>
                         <a asp-controller="Kitap" asp-action="EkleGuncelle" asp-route-id="@item.Id" class="btn btn-info" type="button">Kitap Güncelle</a>
                     </td>

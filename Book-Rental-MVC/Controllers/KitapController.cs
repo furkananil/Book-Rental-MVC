@@ -21,7 +21,7 @@ namespace Book_Rental_MVC.Controllers
 
         public IActionResult Index()
         {
-            List<Kitap> kitapList = _repository.GetAll().ToList();
+            List<Kitap> kitapList = _repository.GetAll(includeProps:"KitapTuru").ToList();
             return View(kitapList);
         }
 
@@ -46,13 +46,15 @@ namespace Book_Rental_MVC.Controllers
                 string wwwRootPath = _webHostEnvironment.WebRootPath;
                 string kitapPath = Path.Combine(wwwRootPath, @"img");
 
-                using(var fileStream = new FileStream(Path.Combine(kitapPath, file.FileName), FileMode.Create))
+                if (file != null)
                 {
-                    file.CopyTo(fileStream);
+                    using (var fileStream = new FileStream(Path.Combine(kitapPath, file.FileName), FileMode.Create))
+                    {
+                        file.CopyTo(fileStream);
+                    }
+                    model.ResimUrl = @"\img\" + file.FileName;
                 }
-                model.ResimUrl = @"\img\" + file.FileName;
-
-
+              
                 if (model.Id == 0)
                 {
                     _repository.Ekle(model);

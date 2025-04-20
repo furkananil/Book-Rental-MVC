@@ -18,7 +18,7 @@ namespace Book_Rental_MVC.Controllers
             List<KitapTuru> kitapTuruList = _repository.GetAll().ToList();
             return View(kitapTuruList);
         }
-
+         
         public IActionResult Ekle()
         {
             return View();
