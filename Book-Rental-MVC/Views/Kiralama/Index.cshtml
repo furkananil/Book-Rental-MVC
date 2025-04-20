@@ -1,0 +1,59 @@
+﻿@model List<Kiralama>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<div class="container">
+
+    <div class="row pt-3 pb-4">
+        <div>
+            <h1>Kitap Kiralamaları</h1>
+        </div>
+    </div>
+    
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Ogrenci Id</th>
+                <th>Kitap Id</th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.OgrenciId</td>
+                    <td>@item.Kitap.KitapAdi</td>
+                    <td>
+                        <a asp-controller="Kiralama" asp-action="EkleGuncelle" asp-route-id="@item.Id" class="btn btn-info" type="button">Kayıt Güncelle</a>
+                    </td>
+                    <td>
+                        <a asp-controller="Kiralama" asp-action="Sil" asp-route-id="@item.Id" class="btn btn-danger" type="button">Kayıt Sil</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="row pt-3 pb-2">
+        <div>
+            <a asp-controller="Kiralama" asp-action="EkleGuncelle" class="btn btn-lg btn-primary" type="button">Yeni Kiralama Kaydı Oluştur</a>
+        </div>
+    </div>
+</div>
+

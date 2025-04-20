@@ -8,7 +8,7 @@ using Microsoft.Data.SqlClient;
 namespace Book_Rental_MVC.Controllers
 {
     public class KiralamaController : Controller
-    {
+    { 
         private readonly IKiralamaRepository _repository;
         private readonly IKitapRepository _kitapRepository;
         public readonly IWebHostEnvironment _webHostEnvironment;
@@ -68,7 +68,12 @@ namespace Book_Rental_MVC.Controllers
 
         public IActionResult Sil(int? id)
         {
-            if(id == null || id == 0)
+            IEnumerable<SelectListItem> KitapList = _kitapRepository.GetAll()
+                .Select(k => new SelectListItem { Text = k.KitapAdi, Value = k.Id.ToString() });
+
+            ViewBag.KitapList = KitapList;
+
+            if (id == null || id == 0)
                 return NotFound();
 
             Kiralama? kiralamaVt = _repository.Get(i => i.Id == id); // idye ait kaydi getir
