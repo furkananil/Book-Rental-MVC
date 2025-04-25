@@ -1,6 +1,8 @@
 ﻿using Book_Rental_MVC.Models;
 using Book_Rental_MVC.Models.Abstract;
 using Book_Rental_MVC.Models.Concrete;
+using Book_Rental_MVC.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
@@ -19,12 +21,14 @@ namespace Book_Rental_MVC.Controllers
             _webHostEnvironment = webHostEnvironment;
         }
 
+        [Authorize(Roles = "Admin,Ogrenci")]
         public IActionResult Index()
         {
             List<Kitap> kitapList = _repository.GetAll(includeProps:"KitapTuru").ToList();
             return View(kitapList);
         }
 
+        [Authorize(Roles = UserRoles.Role_Admin)]
         public IActionResult EkleGuncelle(int? id)
         {
             IEnumerable<SelectListItem> KitapTuruList = _kitapTuruRepository.GetAll()
@@ -38,6 +42,7 @@ namespace Book_Rental_MVC.Controllers
                 return ContextBulVeDon(id);
         }
 
+        [Authorize(Roles = UserRoles.Role_Admin)]
         [HttpPost]
         public IActionResult EkleGuncelle(Kitap model, IFormFile? file)
         {
@@ -71,11 +76,13 @@ namespace Book_Rental_MVC.Controllers
             return View();
         }
 
+        [Authorize(Roles = UserRoles.Role_Admin)]
         public IActionResult Sil(int? id)
         {
             return ContextBulVeDon(id);
         }
 
+        [Authorize(Roles = UserRoles.Role_Admin)]
         [HttpPost, ActionName("Sil")]
         public IActionResult SilPost(int? id)
         {

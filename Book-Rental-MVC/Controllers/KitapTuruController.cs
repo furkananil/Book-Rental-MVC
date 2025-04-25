@@ -1,10 +1,12 @@
 ﻿using Book_Rental_MVC.Models;
 using Book_Rental_MVC.Models.Abstract;
 using Book_Rental_MVC.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Book_Rental_MVC.Controllers
 {
+    [Authorize(Roles = UserRoles.Role_Admin)]
     public class KitapTuruController : Controller
     {
         private readonly IKitapTuruRepository _repository;

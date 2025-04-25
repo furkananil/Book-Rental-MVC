@@ -1,12 +1,15 @@
 ﻿using Book_Rental_MVC.Models;
 using Book_Rental_MVC.Models.Abstract;
 using Book_Rental_MVC.Models.Concrete;
+using Book_Rental_MVC.Utility;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Data.SqlClient;
 
 namespace Book_Rental_MVC.Controllers
 {
+    [Authorize(Roles = UserRoles.Role_Admin)]
     public class KiralamaController : Controller
     { 
         private readonly IKiralamaRepository _repository;
